@@ -1,13 +1,14 @@
 import express, { type Request, type Response } from 'express';
 
+import './config/module-alias';
+import { logger, env } from '@/config';
+
 const app = express();
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ hello: 'world' });
 });
 
-const port = 3000;
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(env.port, () => {
+  logger.info(`Server listening on port ${env.port}!`);
 });
