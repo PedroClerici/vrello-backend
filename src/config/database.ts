@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
-import { env, logger } from './config';
+import env from './env';
+import logger from './logger';
 
 mongoose.Promise = Promise;
 
@@ -20,8 +21,8 @@ mongoose.connection.on('disconnected', () => {
   logger.fatal('Disconnected from database!');
 });
 
-mongoose.connection.on('error', (error: Error) =>
-  logger.fatal('Error on connecting to database!', error),
+mongoose.connection.on('error', (err: Error) =>
+  logger.fatal('Error on connecting to database!', err),
 );
 
 export default connectToDatabase;
