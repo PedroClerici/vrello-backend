@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express';
 
 import { logger } from '@/config';
-import UserModel from '../models/users';
+import UserModel from '../models/users.model';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
