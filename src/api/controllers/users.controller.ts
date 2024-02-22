@@ -53,18 +53,6 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { email, username } = req.body;
 
-    if (!username) {
-      return res.status(400).json({
-        error: 'Username is required',
-      });
-    }
-
-    if (!email) {
-      return res.status(400).json({
-        error: 'Email is required',
-      });
-    }
-
     const user = await UserModel.findByIdAndUpdate(id, { email, username });
     if (!user) {
       return res.status(404).json({
