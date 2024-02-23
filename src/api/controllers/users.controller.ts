@@ -3,21 +3,6 @@ import { type Request, type Response } from 'express';
 import { logger } from '@/config';
 import UserModel from '../models/users.model';
 
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { email, username } = req.body;
-
-    const user = await new UserModel({ email, username })
-      .save()
-      .then((newUser) => newUser.toObject());
-
-    return res.status(200).json(user);
-  } catch (err) {
-    logger.error(err, 'Error while creating an user!');
-    return res.sendStatus(400);
-  }
-};
-
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserModel.find();

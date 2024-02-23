@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "moduleResolution": "Node",
     "esModuleInterop": true,
@@ -12,6 +15,7 @@
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "newLine": "lf",
+    "typeRoots": ["./src/@types"],
     "paths": {
       "@/*": ["*"]
     }

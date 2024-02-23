@@ -3,7 +3,7 @@ import compression from 'compression';
 
 import './config/module-alias';
 import { logger, env, connectToDatabase } from '@/config';
-import router from '@/api/routes';
+import router from './api/routes';
 
 const app = express();
 
