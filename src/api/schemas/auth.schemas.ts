@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // eslint-disable-next-line import/prefer-default-export
-export const createUserSchema = z.object({
+export const registerSchema = z.object({
   body: z.object({
     email: z
       .string({

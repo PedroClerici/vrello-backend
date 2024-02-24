@@ -1,7 +1,8 @@
 import { type Request, type Response, type NextFunction } from 'express';
-import jwt, { type JwtPayload } from 'jsonwebtoken';
+import jwt, { TokenExpiredError, type JwtPayload } from 'jsonwebtoken';
 
 import { env } from '@/config';
+import { UnauthorizedError } from '@/utils/api-errors';
 import UserModel from '../models/users.model';
 
 const isAuthenticated = async (
@@ -9,34 +10,34 @@ const isAuthenticated = async (
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    const { authorization } = req.headers;
+  const { authorization } = req.headers;
 
-    if (!authorization) {
-      throw new Error('Not authorized');
-    }
-
-    const token = authorization.split(' ')[1];
-
-    const { id } = jwt.verify(token, env.jwtPass) as JwtPayload;
-
-    const user = await UserModel.findById(id).then((tokenUser) =>
-      tokenUser?.toObject(),
-    );
-    if (!user) {
-      throw new Error('Not authorized');
-    }
-
-    delete user.password;
-
-    req.user = user;
-
-    return next();
-  } catch (err) {
-    return res.status(401).json({
-      message: 'Not authorized',
-    });
+  if (!authorization) {
+    throw new UnauthorizedError('Not authorized');
   }
+
+  const token = authorization.split(' ')[1];
+
+  const { id } = jwt.verify(token, env.jwtPass, (err, decoded) => {
+    if (err instanceof TokenExpiredError) {
+      throw new UnauthorizedError('Token has expired');
+    }
+
+    return decoded;
+  }) as unknown as JwtPayload;
+
+  const user = await UserModel.findById(id).then((tokenUser) =>
+    tokenUser?.toObject(),
+  );
+  if (!user) {
+    throw new UnauthorizedError('Not authorized');
+  }
+
+  delete user.password;
+
+  req.user = user;
+
+  return next();
 };
 
 export default isAuthenticated;
