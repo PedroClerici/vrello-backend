@@ -16,9 +16,9 @@ const isAuthenticated = async (
     throw new UnauthorizedError('Not authorized');
   }
 
-  const token = authorization.split(' ')[1];
+  const [, token] = authorization.split(' ');
 
-  const { id } = jwt.verify(token, env.jwtPass, (err, decoded) => {
+  const { sub } = jwt.verify(token, env.jwtPass, (err, decoded) => {
     if (err instanceof TokenExpiredError) {
       throw new UnauthorizedError('Token has expired');
     }
@@ -26,7 +26,7 @@ const isAuthenticated = async (
     return decoded;
   }) as unknown as JwtPayload;
 
-  const user = await UserModel.findById(id).then((tokenUser) =>
+  const user = await UserModel.findById(sub).then((tokenUser) =>
     tokenUser?.toObject(),
   );
   if (!user) {

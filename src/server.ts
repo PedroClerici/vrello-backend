@@ -1,6 +1,7 @@
 import 'express-async-errors';
 import express from 'express';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 
 import './config/module-alias';
 import { logger, env, connectToDatabase } from '@/config';
@@ -10,6 +11,7 @@ import errorMiddleware from './api/middlewares/error.middleware';
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(compression());
 
 app.use(router);

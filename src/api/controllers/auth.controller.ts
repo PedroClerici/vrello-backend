@@ -1,9 +1,13 @@
 import { type Request, type Response } from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
-import { logger, env } from '@/config';
-import { BadRequestError, NotFoundError } from '@/utils/api-errors';
+import { env } from '@/config';
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/api-errors';
 import UserModel from '../models/users.model';
 
 export const register = async (req: Request, res: Response) => {
@@ -45,9 +49,54 @@ export const login = async (req: Request, res: Response) => {
     throw new BadRequestError('Email or password are invalid');
   }
 
-  const token = jwt.sign({ id: user._id }, env.jwtPass, { expiresIn: '5m' });
+  const token = jwt.sign({}, env.jwtPass, {
+    subject: user._id.toString(),
+    expiresIn: '5m',
+  });
 
-  return res.json({ token });
+  const refreshToken = jwt.sign({}, env.jwtPass, {
+    subject: user._id.toString(),
+    expiresIn: '7d',
+  });
+
+  return res.cookie('refreshToken', refreshToken).json({ token });
+};
+
+export const refresh = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new UnauthorizedError('Invalid token');
+  }
+
+  const { sub } = jwt.verify(
+    refreshToken as string,
+    env.jwtPass,
+    (err, decoded) => {
+      if (err instanceof TokenExpiredError) {
+        throw new UnauthorizedError('Token has expired');
+      }
+
+      return decoded;
+    },
+  ) as unknown as JwtPayload;
+
+  const user = await UserModel.findById(sub);
+  if (!user) {
+    throw new UnauthorizedError('Invalid token');
+  }
+
+  const token = jwt.sign({}, env.jwtPass, {
+    subject: user._id.toString(),
+    expiresIn: '5m',
+  });
+
+  const newRefreshToken = jwt.sign({}, env.jwtPass, {
+    subject: user._id.toString(),
+    expiresIn: '7d',
+  });
+
+  return res.cookie('refreshToken', newRefreshToken).json({ token });
 };
 
 export const profile = async (req: Request, res: Response) => {
@@ -58,6 +107,5 @@ export const profile = async (req: Request, res: Response) => {
     throw new NotFoundError("Couldn't find user");
   }
 
-  logger.info(user);
   return res.json(user);
 };

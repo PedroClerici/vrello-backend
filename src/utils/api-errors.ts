@@ -1,14 +1,16 @@
+import { type ZodIssue } from 'zod';
+
 export interface ApiError extends Error {
   statusCode: number;
-  issues?: { _errors: string[] };
+  issues?: ZodIssue[];
 }
 
 export class BadRequestError extends Error implements ApiError {
   public readonly statusCode: number;
 
-  public readonly issues?: { _errors: string[] };
+  public readonly issues?: ZodIssue[];
 
-  constructor(message: string, issues?: { _errors: string[] }) {
+  constructor(message: string, issues?: ZodIssue[]) {
     super(message);
     this.issues = issues;
     this.statusCode = 400;

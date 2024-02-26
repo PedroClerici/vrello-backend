@@ -14,5 +14,6 @@ authRouter.post(
 );
 authRouter.post('/login', authController.login);
 authRouter.get('/profile', isAuthenticated, authController.profile);
+authRouter.post('/refresh', authController.refresh);
 
 export default authRouter;

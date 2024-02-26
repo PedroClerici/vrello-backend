@@ -10,10 +10,11 @@ const validateResource =
       query: req.query,
       params: req.params,
     });
+
     if (!validatedSchema.success) {
       throw new BadRequestError(
         'Validation fail',
-        validatedSchema.error.format(),
+        validatedSchema.error.issues,
       );
     }
 

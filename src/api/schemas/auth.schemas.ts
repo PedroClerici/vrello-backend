@@ -3,22 +3,8 @@ import { z } from 'zod';
 // eslint-disable-next-line import/prefer-default-export
 export const registerSchema = z.object({
   body: z.object({
-    email: z
-      .string({
-        required_error: 'Email is required',
-      })
-      .email('Not a valid email')
-      .trim(),
-    username: z
-      .string({
-        required_error: 'Username is required',
-      })
-      .trim(),
-    password: z
-      .string({
-        required_error: 'Password is required',
-      })
-      .min(5)
-      .max(100),
+    email: z.string().email().trim(),
+    username: z.string().trim(),
+    password: z.string().min(5).max(100),
   }),
 });

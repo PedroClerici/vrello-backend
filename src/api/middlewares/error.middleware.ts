@@ -17,7 +17,7 @@ const errorMiddleware = (
     return res.status(statusCode).json({ message, issues: err.issues });
   }
 
-  if (err.statusCode === 500) {
+  if (statusCode === 500) {
     logger.error(err, `Internal server error on route: ${req.url}`);
   }
 
