@@ -2,18 +2,19 @@ import { Router } from 'express';
 
 import * as authController from '../controllers/auth.controller';
 import isAuthenticated from '../middlewares/auth.middleware';
-import validateResource from '../middlewares/validate-resource.middleware';
-import { registerSchema } from '../schemas/auth.schemas';
+import { validateRequest, requirements } from '../middlewares/validator';
 
 const authRouter = Router();
 
-authRouter.post(
-  '/register',
-  validateResource(registerSchema),
-  authController.register,
-);
-authRouter.post('/login', authController.login);
-authRouter.get('/profile', isAuthenticated, authController.profile);
-authRouter.post('/refresh', authController.refresh);
+authRouter
+  .route('/register')
+  .post(validateRequest(requirements.register), authController.register);
+
+authRouter
+  .route('/login')
+  .post(validateRequest(requirements.login), authController.login);
+
+authRouter.route('/profile').get(isAuthenticated, authController.profile);
+authRouter.route('/refresh').post(authController.refresh);
 
 export default authRouter;
