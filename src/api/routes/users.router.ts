@@ -8,7 +8,7 @@ const usersRouter = Router();
 
 usersRouter.use(isAuthenticated);
 
-usersRouter.get('/', userController.getAllUsers);
+usersRouter.route('/').get(userController.getAllUsers);
 
 usersRouter
   .route('/:id')

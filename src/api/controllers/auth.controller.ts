@@ -9,27 +9,22 @@ import {
   UnauthorizedError,
 } from '@/utils/api-errors';
 import UserModel from '../models/users.model';
+import * as UserService from '../services/users.service';
 
 export const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, env.saltRounds);
 
-  const existingUser = await UserModel.findOne({ email });
-  if (existingUser) {
-    throw new BadRequestError('User already exists');
-  }
-
-  const user = await new UserModel({
+  const user = await UserService.createUser({
     username,
     email,
     password: hashedPassword,
-  })
-    .save()
-    .then((newUser) => newUser.toObject());
+  });
 
-  // deletes user password from the payload:
-  delete user.password;
+  if (!user) {
+    throw new BadRequestError('User already exists');
+  }
 
   return res.status(200).json(user);
 };

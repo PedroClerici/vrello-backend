@@ -1,10 +1,10 @@
 import { type Request, type Response } from 'express';
 
 import { NotFoundError } from '@/utils/api-errors';
-import UserModel from '../models/users.model';
+import * as UserService from '../services/users.service';
 
 export const getAllUsers = async (req: Request, res: Response) => {
-  const users = await UserModel.find();
+  const users = await UserService.getAllUsers();
 
   return res.json(users);
 };
@@ -12,7 +12,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const user = await UserModel.findById(id);
+  const user = await UserService.getUserById(id);
+
   if (!user) {
     throw new NotFoundError("Couldn't find user");
   }
@@ -22,27 +23,25 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { email, username } = req.body;
+  const userInput = req.body;
 
-  const user = await UserModel.findById(id);
-  if (!user) {
+  const userUpdated = await UserService.updateUser(id, userInput);
+
+  if (!userUpdated) {
     throw new NotFoundError("Couldn't find user");
   }
-  user.email = email;
-  user.username = username;
-  await user.save();
 
-  return res.json(user);
+  return res.json(userUpdated);
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const deletedUser = await UserModel.findByIdAndDelete(id);
+  const userDeleted = await UserService.deleteUser(id);
 
-  if (!deletedUser) {
+  if (!userDeleted) {
     throw new NotFoundError("Couldn't find user");
   }
 
-  return res.json(deletedUser);
+  return res.json(userDeleted);
 };

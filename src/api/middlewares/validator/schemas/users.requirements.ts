@@ -1,13 +1,15 @@
 import { z } from 'zod';
-import { Types } from 'mongoose';
 
 const userRequirements = {
   getUser: z.object({
     params: z.object({
-      id: z.instanceof(Types.ObjectId),
+      id: z.string(),
     }),
   }),
   updateUser: z.object({
+    params: z.object({
+      id: z.string(),
+    }),
     body: z
       .object({
         email: z.string().email().trim().optional(),
@@ -18,7 +20,7 @@ const userRequirements = {
   }),
   deleteUser: z.object({
     params: z.object({
-      id: z.instanceof(Types.ObjectId),
+      id: z.string(),
     }),
   }),
 };
