@@ -3,14 +3,21 @@ import jwt, { type JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 import { env } from '@/config';
 import { UnauthorizedError } from '@/utils/api-errors';
-import UserModel, { type User } from '../models/users.model';
-import UsersService from './users.service';
+import { type User } from '../models/users.model';
+import { type UsersRepository } from '../repositories';
+import { MongooseUsersRepository } from '../repositories/users.repository';
 
 class AuthService {
+  private readonly userRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.userRepository = usersRepository;
+  }
+
   async register(user: User) {
     const hashedPassword = await bcrypt.hash(user.password!, env.saltRounds);
 
-    const userRegistered = await UsersService.createUser({
+    const userRegistered = await this.userRepository.create({
       username: user.username,
       email: user.email,
       password: hashedPassword,
@@ -20,10 +27,7 @@ class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await UserModel.findOne({ email })
-      .populate('password')
-      .then((loginUser) => loginUser?.toObject());
-
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new UnauthorizedError('Email or password are invalid');
     }
@@ -34,12 +38,12 @@ class AuthService {
     }
 
     const token = jwt.sign({}, env.jwtPass, {
-      subject: user._id.toString(),
+      subject: user.id.toString(),
       expiresIn: '5m',
     });
 
     const refreshToken = jwt.sign({}, env.jwtPass, {
-      subject: user._id.toString(),
+      subject: user.id.toString(),
       expiresIn: '7d',
     });
 
@@ -59,18 +63,18 @@ class AuthService {
       return decoded;
     }) as unknown as JwtPayload;
 
-    const user = await UsersService.getUserById(sub!);
+    const user = await this.userRepository.findById(sub!);
     if (!user) {
       throw new UnauthorizedError('Invalid token');
     }
 
     const token = jwt.sign({}, env.jwtPass, {
-      subject: user._id.toString(),
+      subject: user.id.toString(),
       expiresIn: '5m',
     });
 
     const newRefreshToken = jwt.sign({}, env.jwtPass, {
-      subject: user._id.toString(),
+      subject: user.id.toString(),
       expiresIn: '7d',
     });
 
@@ -78,4 +82,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new AuthService(new MongooseUsersRepository());

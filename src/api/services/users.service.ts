@@ -1,31 +1,43 @@
 import { Types } from 'mongoose';
 
 import { BadRequestError, NotFoundError } from '@/utils/api-errors';
-import UserModel, { type User } from '../models/users.model';
+import { type UsersRepository } from '../repositories';
+import { type User } from '../models/users.model';
+import { MongooseUsersRepository } from '../repositories/users.repository';
 
 class UsersService {
-  async createUser(user: User) {
-    const userAlreadyExists = await UserModel.findOne({
-      $or: [{ email: user.email }, { username: user.username }],
-    });
+  private readonly userRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.userRepository = usersRepository;
+  }
+
+  async createUser(user: Omit<User, 'id'>) {
+    const userAlreadyExists = await this.userRepository.findByEmail(user.email);
 
     if (userAlreadyExists) {
       throw new BadRequestError('User already exists');
     }
 
-    const userCreated = await UserModel.create(user).then((newUser) =>
-      newUser.toObject(),
-    );
+    const userCreated = await this.userRepository.create(user);
 
-    delete userCreated.password;
+    if (!userCreated) {
+      throw new Error("Couldn't create user");
+    }
+
+    delete (userCreated as { password?: string }).password;
 
     return userCreated;
   }
 
   async getAllUsers() {
-    return UserModel.find().then((users) =>
-      users.map((user) => user.toObject()),
-    );
+    const users = await this.userRepository.findAll();
+
+    return users.map((user) => {
+      // eslint-disable-next-line no-param-reassign
+      delete (user as { password?: string }).password;
+      return user;
+    });
   }
 
   async getUserById(id: string) {
@@ -33,23 +45,27 @@ class UsersService {
       throw new NotFoundError("Couldn't find user");
     }
 
-    const userFound = await UserModel.findById(id);
+    const userFound = await this.userRepository.findById(id);
 
     if (!userFound) {
       throw new NotFoundError("Couldn't find user");
     }
 
-    return userFound.toObject();
+    delete (userFound as { password?: string }).password;
+
+    return userFound;
   }
 
   getUserByEmail = async (email: string) => {
-    const userFound = await UserModel.findOne({ email });
+    const userFound = await this.userRepository.findByEmail(email);
 
     if (!userFound) {
       throw new NotFoundError("Couldn't find user");
     }
 
-    return userFound.toObject();
+    delete (userFound as { password?: string }).password;
+
+    return userFound;
   };
 
   async updateUser(id: string, user: Partial<User>) {
@@ -57,15 +73,15 @@ class UsersService {
       throw new NotFoundError("Couldn't find user");
     }
 
-    const userUpdated = await UserModel.findByIdAndUpdate({ _id: id }, user, {
-      new: true,
-    });
+    const userUpdated = await this.userRepository.update(id, user);
 
     if (!userUpdated) {
       throw new NotFoundError("Couldn't find user");
     }
 
-    return userUpdated.toObject();
+    delete (userUpdated as { password?: string }).password;
+
+    return userUpdated;
   }
 
   async deleteUser(id: string) {
@@ -73,14 +89,16 @@ class UsersService {
       throw new NotFoundError("Couldn't find user");
     }
 
-    const userDeleted = await UserModel.findByIdAndDelete(id);
+    const userDeleted = await this.userRepository.delete(id);
 
     if (!userDeleted) {
       throw new NotFoundError("Couldn't find user");
     }
 
-    return userDeleted.toObject();
+    delete (userDeleted as { password?: string }).password;
+
+    return userDeleted;
   }
 }
 
-export default new UsersService();
+export default new UsersService(new MongooseUsersRepository());

@@ -33,7 +33,7 @@ const isAuthenticated = async (
     throw new UnauthorizedError('Not authorized');
   }
 
-  delete user.password;
+  // delete user.password;
 
   req.user = user;
 
