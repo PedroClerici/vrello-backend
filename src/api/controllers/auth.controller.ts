@@ -1,39 +1,56 @@
 import { type Request, type Response } from 'express';
 
-import { UnauthorizedError } from '@/utils/api-errors';
-import UsersService from '../services/users.service';
-import AuthService from '../services/auth.service';
+import RegisterService from '../services/auth/register.service';
+import { MongooseUsersRepository } from '../repositories/users.repository';
+import RegisterRequestDTO from '../dtos/register/register-request.dto';
+import RegisterResponseDTO from '../dtos/register/register-response.dto';
+import LoginRequestDTO from '../dtos/login/login-request.dto';
+import LoginService from '../services/auth/login.service';
+import RefreshService from '../services/auth/refresh.service';
+import RefreshRequestDTO from '../dtos/refresh/refresh-request.dto';
+import GetUserByEmailService from '../services/users/get-user-by-email.service';
+import GetUserByEmailRequestDTO from '../dtos/get-user-by/get-user-by-email-request.dto';
+import GetUserByResponseDTO from '../dtos/get-user-by/get-user-by-response.dto';
 
 export const register = async (req: Request, res: Response) => {
-  const userInput = req.body;
+  const data = new RegisterRequestDTO({ ...req.body });
 
-  const user = await AuthService.register(userInput);
+  const user = await new RegisterService(new MongooseUsersRepository()).execute(
+    data,
+  );
 
-  return res.status(200).json(user);
+  return res.status(201).json(new RegisterResponseDTO(user).getAll());
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const data = new LoginRequestDTO({ ...req.body });
 
-  const [token, refreshToken] = await AuthService.login(email, password);
+  const [token, refreshToken] = await new LoginService(
+    new MongooseUsersRepository(),
+  ).execute(data);
 
-  return res.cookie('refreshToken', refreshToken).json({ token });
+  return res.status(200).cookie('refreshToken', refreshToken).json({ token });
 };
 
 export const refresh = async (req: Request, res: Response) => {
-  const { refreshToken } = req.cookies;
+  const data = new RefreshRequestDTO({ ...req.cookies });
 
-  if (!refreshToken) {
-    throw new UnauthorizedError('Invalid token');
-  }
+  const [token, newRefreshToken] = await new RefreshService(
+    new MongooseUsersRepository(),
+  ).execute(data);
 
-  const [token, newRefreshToken] = await AuthService.refresh(refreshToken);
-
-  return res.cookie('refreshToken', newRefreshToken).json({ token });
+  return res
+    .status(200)
+    .cookie('refreshToken', newRefreshToken)
+    .json({ token });
 };
 
 export const profile = async (req: Request, res: Response) => {
-  const user = await UsersService.getUserByEmail(req.user.email!);
+  const data = new GetUserByEmailRequestDTO({ email: req.user.email });
 
-  return res.status(200).json(user);
+  const user = await new GetUserByEmailService(
+    new MongooseUsersRepository(),
+  ).execute(data);
+
+  return res.status(200).json(new GetUserByResponseDTO(user).getAll());
 };

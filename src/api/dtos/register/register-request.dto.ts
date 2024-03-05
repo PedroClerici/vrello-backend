@@ -2,16 +2,16 @@ import z from 'zod';
 
 import AbstractDTO from '../abstract.dto';
 
-const createUserSchema = z.object({
+const registerRequestSchema = z.object({
   username: z.string().trim().toLowerCase(),
   email: z.string().email().trim().toLowerCase(),
   password: z.string().min(5),
 });
 
-class CreateUserRequestDTO extends AbstractDTO<typeof createUserSchema> {
+class RegisterRequestDTO extends AbstractDTO<typeof registerRequestSchema> {
   protected rules() {
-    return createUserSchema;
+    return registerRequestSchema;
   }
 }
 
-export default CreateUserRequestDTO;
+export default RegisterRequestDTO;

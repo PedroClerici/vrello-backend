@@ -1,47 +1,53 @@
 import { type Request, type Response } from 'express';
 
-import { NotFoundError } from '@/utils/api-errors';
-import UsersService from '../services/users.service';
+import GetUserByIdRequestDTO from '../dtos/get-user-by/get-user-by-id-request.dto';
+import GetUserByIdService from '../services/users/get-user-by-id.service';
+import { MongooseUsersRepository } from '../repositories/users.repository';
+import GetUserByResponseDTO from '../dtos/get-user-by/get-user-by-response.dto';
+import UpdateUserRequestDTO from '../dtos/update-user/update-user-request.dto';
+import UpdateUserService from '../services/users/update-user.service';
+import UpdateUserResponseDTO from '../dtos/update-user/update-user-response.dto';
+import DeleteUserRequestDTO from '../dtos/delete-user/delete-user-request.dto';
+import DeleteUserService from '../services/users/delete-user.service';
+import FetchUsersService from '../services/users/fetch-users.service';
+import FetchUsersResponseDTO from '../dtos/fetch-users/fetch-users-response.dto';
 
 export const getAllUsers = async (req: Request, res: Response) => {
-  const users = await UsersService.getAllUsers();
+  const users = await new FetchUsersService(
+    new MongooseUsersRepository(),
+  ).execute();
 
-  return res.json(users);
+  return res.json(
+    users.map((user) => new FetchUsersResponseDTO(user).getAll()),
+  );
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const data = new GetUserByIdRequestDTO({ ...req.params });
 
-  const user = await UsersService.getUserById(id);
+  const user = await new GetUserByIdService(
+    new MongooseUsersRepository(),
+  ).execute(data);
 
-  if (!user) {
-    throw new NotFoundError("Couldn't find user");
-  }
-
-  return res.json(user);
+  return res.status(200).json(new GetUserByResponseDTO(user).getAll());
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const userInput = req.body;
+  const data = new UpdateUserRequestDTO({ ...req.params, ...req.body });
 
-  const userUpdated = await UsersService.updateUser(id, userInput);
+  const userUpdated = await new UpdateUserService(
+    new MongooseUsersRepository(),
+  ).execute(data);
 
-  if (!userUpdated) {
-    throw new NotFoundError("Couldn't find user");
-  }
-
-  return res.json(userUpdated);
+  return res.status(200).json(new UpdateUserResponseDTO(userUpdated).getAll());
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const data = new DeleteUserRequestDTO({ ...req.params });
 
-  const userDeleted = await UsersService.deleteUser(id);
+  const userDeleted = await new DeleteUserService(
+    new MongooseUsersRepository(),
+  ).execute(data);
 
-  if (!userDeleted) {
-    throw new NotFoundError("Couldn't find user");
-  }
-
-  return res.json(userDeleted);
+  return res.status(200).json(new GetUserByResponseDTO(userDeleted).getAll());
 };

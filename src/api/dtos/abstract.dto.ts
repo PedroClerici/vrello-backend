@@ -15,13 +15,13 @@ abstract class AbstractDTO<Schema extends ZodType> {
     return this.data;
   }
 
-  public get<Key extends keyof z.infer<Schema>>(key: Key) {
+  public get<K extends keyof z.infer<Schema>>(key: K) {
     return this.data[key];
   }
 
   private validate(data: Record<string, unknown>) {
     try {
-      this.rules().parse(data);
+      this.data = this.rules().parse(data);
     } catch (err) {
       if (err instanceof ZodError)
         throw new BadRequestError('Validation fail', err.issues);

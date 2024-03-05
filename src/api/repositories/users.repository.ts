@@ -55,4 +55,4 @@ export class MongooseUsersRepository implements UsersRepository {
   }
 }
 
-export default new MongooseUsersRepository();
+export default MongooseUsersRepository;
