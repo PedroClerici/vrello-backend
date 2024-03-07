@@ -3,16 +3,18 @@ import { Types } from 'mongoose';
 
 import AbstractDTO from '../abstract.dto';
 
-const registerResponseSchema = z.object({
+const updateUserResponseSchema = z.object({
   id: z.instanceof(Types.ObjectId),
   username: z.string().trim(),
   email: z.string().email().trim().toLowerCase(),
 });
 
-class RegisterResponseDTO extends AbstractDTO<typeof registerResponseSchema> {
+class UpdateUserResponseDTO extends AbstractDTO<
+  typeof updateUserResponseSchema
+> {
   protected rules() {
-    return registerResponseSchema;
+    return updateUserResponseSchema;
   }
 }
 
-export default RegisterResponseDTO;
+export default UpdateUserResponseDTO;

@@ -1,7 +1,7 @@
 import UserModel, { type User } from '../models/users.model';
 import { type UsersRepository } from '.';
 
-export class MongooseUsersRepository implements UsersRepository {
+class MongooseUsersRepository implements UsersRepository {
   async create(params: Omit<User, 'id'>): Promise<User | null> {
     const user = await UserModel.create(params);
     return user.toObject();

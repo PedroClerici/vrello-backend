@@ -1,9 +1,10 @@
 import z from 'zod';
+import { Types } from 'mongoose';
 
 import AbstractDTO from '../abstract.dto';
 
 const getUserByResponseSchema = z.object({
-  id: z.string(),
+  id: z.instanceof(Types.ObjectId),
   username: z.string().trim(),
   email: z.string().email().trim().toLowerCase(),
 });
