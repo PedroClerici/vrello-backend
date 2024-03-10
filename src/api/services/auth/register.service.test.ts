@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 
+import RegisterService from './register.service';
 import RegisterRequestDTO from '@/api/dtos/register/register-request.dto';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
 import makeUser from './make-user.factory';
-import RegisterService from './register.service';
 import { BadRequestError } from '@/utils/api-errors';
 
 describe('Register user', () => {
@@ -25,7 +25,7 @@ describe('Register user', () => {
     expect(await bcrypt.compare(userData.get('password'), user.password)).toBe(
       true,
     );
-    expect(usersRepository.data).length(1);
+    expect(usersRepository.data).toHaveLength(1);
   });
 
   it('should not be able to create an user with the same email', async () => {

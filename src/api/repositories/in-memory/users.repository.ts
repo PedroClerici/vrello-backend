@@ -18,7 +18,7 @@ class UsersRepositoryInMemory implements UsersRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.data.find((user) => user.id === new Types.ObjectId(id)) ?? null;
+    return this.data.find((user) => user.id.toString() === id) ?? null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -31,21 +31,7 @@ class UsersRepositoryInMemory implements UsersRepository {
 
   async update(id: string, params: Partial<User>): Promise<User | null> {
     const foundUserIndex = this.data.findIndex(
-      (user) => user.id === new Types.ObjectId(id),
-    );
-
-    if (foundUserIndex === -1) {
-      return null;
-    }
-
-    const user = { ...params, ...this.data[foundUserIndex] };
-    this.data[foundUserIndex] = user;
-    return user;
-  }
-
-  async delete(id: string): Promise<User | null> {
-    const foundUserIndex = this.data.findIndex(
-      (user) => user.id === new Types.ObjectId(id),
+      (user) => user.id.toString() === id,
     );
 
     if (foundUserIndex === -1) {
@@ -53,10 +39,22 @@ class UsersRepositoryInMemory implements UsersRepository {
     }
 
     const user = this.data[foundUserIndex];
-
-    this.data.splice(foundUserIndex, 1);
+    Object.assign(user, params);
+    this.data[foundUserIndex] = user;
 
     return user;
+  }
+
+  async delete(id: string): Promise<User | null> {
+    const foundUser = this.data.find((user) => user.id.toString() === id);
+
+    if (!foundUser) {
+      return null;
+    }
+
+    this.data = this.data.filter((user) => user.id !== foundUser.id);
+
+    return foundUser;
   }
 }
 
