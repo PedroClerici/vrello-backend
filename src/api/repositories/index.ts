@@ -10,4 +10,5 @@ export interface BaseRepository<T> {
 
 export interface UsersRepository extends BaseRepository<User> {
   findByEmail(email: string): Promise<User | null>;
+  findByUsername(username: string): Promise<User | null>;
 }

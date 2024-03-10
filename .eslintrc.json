@@ -30,6 +30,9 @@
     "class-methods-use-this": "off"
     // "import/extensions": ["error", "always", { "ignorePackages": true }]
   },
+  "env": {
+    "vitest-globals/env": true
+  },
   "settings": {
     "import/resolver": {
       "typescript": {}

@@ -3,12 +3,12 @@ import { type Request, type Response } from 'express';
 import RegisterRequestDTO from '@/api/dtos/register/register-request.dto';
 import RegisterResponseDTO from '@/api/dtos/register/register-response.dto';
 import RegisterService from '@/api/services/auth/register.service';
-import MongooseUsersRepository from '@/api/repositories/users.repository';
+import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 
 const register = async (request: Request, response: Response) => {
   const data = new RegisterRequestDTO({ ...request.body });
 
-  const user = await new RegisterService(new MongooseUsersRepository()).execute(
+  const user = await new RegisterService(new UsersRepositoryMongoose()).execute(
     data,
   );
 

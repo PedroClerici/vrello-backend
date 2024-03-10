@@ -1,42 +1,36 @@
-import { Types, isValidObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { type User } from '@/api/models/users.model';
 import { type UsersRepository } from '..';
 
 class UsersRepositoryInMemory implements UsersRepository {
-  private users: User[] = [];
+  public data: User[] = [];
 
   async create(params: Omit<User, 'id'>): Promise<User | null> {
     const user = { id: new Types.ObjectId(), ...params };
-    this.users.push(user);
+    this.data.push(user);
 
-    return this.users.find((foundUser) => foundUser.id === user.id) ?? null;
+    return this.data.find((foundUser) => foundUser.id === user.id) ?? null;
   }
 
   async findAll(): Promise<User[]> {
-    return this.users;
+    return this.data;
   }
 
   async findById(id: string): Promise<User | null> {
-    if (!isValidObjectId(id)) {
-      return null;
-    }
-
-    return (
-      this.users.find((user) => user.id === new Types.ObjectId(id)) ?? null
-    );
+    return this.data.find((user) => user.id === new Types.ObjectId(id)) ?? null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.users.find((user) => user.email === email) ?? null;
+    return this.data.find((user) => user.email === email) ?? null;
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.data.find((user) => user.username === username) ?? null;
   }
 
   async update(id: string, params: Partial<User>): Promise<User | null> {
-    if (!isValidObjectId(id)) {
-      return null;
-    }
-
-    const foundUserIndex = this.users.findIndex(
+    const foundUserIndex = this.data.findIndex(
       (user) => user.id === new Types.ObjectId(id),
     );
 
@@ -44,17 +38,13 @@ class UsersRepositoryInMemory implements UsersRepository {
       return null;
     }
 
-    const user = { ...params, ...this.users[foundUserIndex] };
-    this.users[foundUserIndex] = user;
+    const user = { ...params, ...this.data[foundUserIndex] };
+    this.data[foundUserIndex] = user;
     return user;
   }
 
   async delete(id: string): Promise<User | null> {
-    if (!isValidObjectId(id)) {
-      return null;
-    }
-
-    const foundUserIndex = this.users.findIndex(
+    const foundUserIndex = this.data.findIndex(
       (user) => user.id === new Types.ObjectId(id),
     );
 
@@ -62,9 +52,9 @@ class UsersRepositoryInMemory implements UsersRepository {
       return null;
     }
 
-    const user = this.users[foundUserIndex];
+    const user = this.data[foundUserIndex];
 
-    this.users.splice(foundUserIndex, 1);
+    this.data.splice(foundUserIndex, 1);
 
     return user;
   }

@@ -1,7 +1,7 @@
-import UserModel, { type User } from '../models/users.model';
-import { type UsersRepository } from '.';
+import UserModel, { type User } from '../../models/users.model';
+import { type UsersRepository } from '..';
 
-class MongooseUsersRepository implements UsersRepository {
+class UsersRepositoryMongoose implements UsersRepository {
   async create(params: Omit<User, 'id'>): Promise<User | null> {
     const user = await UserModel.create(params);
     return user.toObject();
@@ -24,6 +24,16 @@ class MongooseUsersRepository implements UsersRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return null;
+    }
+
+    return user.toObject();
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    const user = await UserModel.findOne({ username });
 
     if (!user) {
       return null;
@@ -55,4 +65,4 @@ class MongooseUsersRepository implements UsersRepository {
   }
 }
 
-export default MongooseUsersRepository;
+export default UsersRepositoryMongoose;

@@ -15,7 +15,8 @@
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "newLine": "lf",
-    "typeRoots": ["./src/@types"],
+    "typeRoots": ["./node_modules/@types", "./node_modules", "./src/@types"],
+    "types": ["vitest/globals"],
     "paths": {
       "@/*": ["*"]
     }

@@ -9,12 +9,20 @@ class RegisterService {
   public constructor(private readonly userRepository: UsersRepository) {}
 
   public async execute(data: RegisterRequestDTO) {
-    const userAlreadyExists = await this.userRepository.findByEmail(
+    const userEmailAlreadyExists = await this.userRepository.findByEmail(
       data.get('email'),
     );
 
-    if (userAlreadyExists) {
-      throw new BadRequestError('User already exists');
+    if (userEmailAlreadyExists) {
+      throw new BadRequestError('User with this email already exists');
+    }
+
+    const userUsernameAlreadyExists = await this.userRepository.findByUsername(
+      data.get('username'),
+    );
+
+    if (userUsernameAlreadyExists) {
+      throw new BadRequestError('User with this username already exists');
     }
 
     const user = {
