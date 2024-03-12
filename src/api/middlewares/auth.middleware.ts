@@ -3,7 +3,10 @@ import jwt, { TokenExpiredError, type JwtPayload } from 'jsonwebtoken';
 
 import { env } from '@/config';
 import { UnauthorizedError } from '@/utils/api-errors';
-import UserModel from '../models/users.model';
+import GetUserByIdService from '../services/users/get-user-by-id.service';
+import UsersRepositoryMongoose from '../repositories/mongoose/users.repository';
+import GetUserByIdRequestDTO from '../dtos/get-user-by/get-user-by-id-request.dto';
+import GetUserByResponseDTO from '../dtos/get-user-by/get-user-by-response.dto';
 
 const isAuthenticated = async (
   req: Request,
@@ -18,7 +21,7 @@ const isAuthenticated = async (
 
   const [, token] = authorization.split(' ');
 
-  const { sub } = jwt.verify(token, env.jwtPass, (err, decoded) => {
+  const { sub } = jwt.verify(token, env.JWT_PASS, (err, decoded) => {
     if (err instanceof TokenExpiredError) {
       throw new UnauthorizedError('Token has expired');
     }
@@ -26,16 +29,15 @@ const isAuthenticated = async (
     return decoded;
   }) as unknown as JwtPayload;
 
-  const user = await UserModel.findById(sub).then((tokenUser) =>
-    tokenUser?.toObject(),
-  );
+  const user = await new GetUserByIdService(
+    new UsersRepositoryMongoose(),
+  ).execute(new GetUserByIdRequestDTO({ id: sub }));
+
   if (!user) {
     throw new UnauthorizedError('Not authorized');
   }
 
-  // delete user.password;
-
-  req.user = user;
+  req.user = new GetUserByResponseDTO(user).getAll();
 
   return next();
 };

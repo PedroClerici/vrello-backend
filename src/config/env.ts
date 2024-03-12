@@ -1,15 +1,27 @@
 import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config();
 
-const { NODE_ENV, PORT, DATABASE_URI, SALT_ROUNDS, JWT_PASS } = process.env;
+const envSchema = z.object({
+  NODE_ENV: z
+    .enum(['production', 'development', 'test'])
+    .optional()
+    .default('development'),
+  PORT: z.coerce.number().optional().default(3000),
+  DATABASE_URL: z.string().url(),
+  SALT_ROUNDS: z.coerce.number().optional().default(8),
+  JWT_PASS: z.string(),
+  JWT_TOKEN_EXPIRE: z.string().optional().default('5m'),
+  JWT_REFRESH_TOKEN_EXPIRE: z.string().optional().default('7d'),
+});
 
-const env = {
-  nodeEnv: String(NODE_ENV),
-  port: Number(PORT),
-  databaseUri: String(DATABASE_URI),
-  saltRounds: Number(SALT_ROUNDS),
-  jwtPass: String(JWT_PASS),
-};
+const env = envSchema.safeParse(process.env);
 
-export default env;
+if (env.success === false) {
+  console.error('Invalid environment variables!', env.error.issues);
+
+  throw new Error('Invalid environment variables!');
+}
+
+export default env.data;

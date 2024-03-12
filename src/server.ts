@@ -19,7 +19,7 @@ app.use(router);
 app.use(errorMiddleware);
 
 connectToDatabase().then(() => {
-  app.listen(env.port, () => {
-    logger.info(`Server started on port: ${env.port}`);
+  app.listen(env.PORT, () => {
+    logger.info(`Server started on port: ${env.PORT}`);
   });
 });

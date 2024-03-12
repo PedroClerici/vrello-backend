@@ -25,14 +25,14 @@ class LoginService {
       throw new UnauthorizedError('Email or password are invalid');
     }
 
-    const token = jwt.sign({}, env.jwtPass, {
+    const token = jwt.sign({}, env.JWT_PASS, {
       subject: user.id.toString(),
-      expiresIn: '5m',
+      expiresIn: env.JWT_TOKEN_EXPIRE,
     });
 
-    const refreshToken = jwt.sign({}, env.jwtPass, {
+    const refreshToken = jwt.sign({}, env.JWT_PASS, {
       subject: user.id.toString(),
-      expiresIn: '7d',
+      expiresIn: env.JWT_REFRESH_TOKEN_EXPIRE,
     });
 
     return [token, refreshToken];

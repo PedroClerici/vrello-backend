@@ -6,7 +6,7 @@ import logger from './logger';
 mongoose.Promise = Promise;
 
 const connectToDatabase = async () => {
-  await mongoose.connect(env.databaseUri);
+  await mongoose.connect(env.DATABASE_URL);
 };
 
 mongoose.connection.on('connecting', () => {

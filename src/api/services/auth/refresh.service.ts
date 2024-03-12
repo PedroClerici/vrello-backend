@@ -11,7 +11,7 @@ class RefreshService {
   public async execute(data: RefreshRequestDTO) {
     const { sub } = jwt.verify(
       data.get('refreshToken'),
-      env.jwtPass,
+      env.JWT_PASS,
       (err, decoded) => {
         if (err instanceof TokenExpiredError) {
           throw new UnauthorizedError('Token has expired');
@@ -30,14 +30,14 @@ class RefreshService {
       throw new UnauthorizedError('Invalid token');
     }
 
-    const token = jwt.sign({}, env.jwtPass, {
+    const token = jwt.sign({}, env.JWT_PASS, {
       subject: user.id.toString(),
-      expiresIn: '5m',
+      expiresIn: env.JWT_TOKEN_EXPIRE,
     });
 
-    const newRefreshToken = jwt.sign({}, env.jwtPass, {
+    const newRefreshToken = jwt.sign({}, env.JWT_PASS, {
       subject: user.id.toString(),
-      expiresIn: '7d',
+      expiresIn: env.JWT_REFRESH_TOKEN_EXPIRE,
     });
 
     return [token, newRefreshToken];

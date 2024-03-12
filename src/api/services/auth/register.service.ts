@@ -31,7 +31,7 @@ class RegisterService {
 
     const passwordHash = await bcrypt.hash(
       data.get('password'),
-      env.saltRounds,
+      env.SALT_ROUNDS,
     );
 
     user.password = passwordHash;
