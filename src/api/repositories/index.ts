@@ -1,3 +1,4 @@
+import { type Board } from '../models/boards.model';
 import { type User } from '../models/users.model';
 
 export interface BaseRepository<T> {

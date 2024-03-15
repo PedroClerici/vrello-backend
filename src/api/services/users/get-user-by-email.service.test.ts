@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import GetUserByEmailService from './get-user-by-email.service';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
 import GetUserByEmailRequestDTO from '@/api/dtos/get-user-by/get-user-by-email-request.dto';
-import makeUser from '../auth/make-user.factory';
+import makeUser from '@/tests/helpers/make-user.factory';
 import { BadRequestError } from '@/utils/api-errors';
 
 describe('Get user by email', () => {

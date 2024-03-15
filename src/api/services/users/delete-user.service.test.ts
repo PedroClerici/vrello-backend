@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 import DeleteUserRequestDTO from '@/api/dtos/delete-user/delete-user-request.dto';
-import makeUser from '../auth/make-user.factory';
+import makeUser from '@/tests/helpers/make-user.factory';
 import DeleteUserService from './delete-user.service';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
 import { BadRequestError } from '@/utils/api-errors';

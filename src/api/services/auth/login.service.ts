@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 import { env } from '@/config';
+import { signJwt } from '@/utils/jwt';
 import { UnauthorizedError } from '@/utils/api-errors';
 import { type UsersRepository } from '@/api/repositories';
 import type LoginRequestDTO from '@/api/dtos/login/login-request.dto';
@@ -25,12 +25,12 @@ class LoginService {
       throw new UnauthorizedError('Email or password are invalid');
     }
 
-    const token = jwt.sign({}, env.JWT_PASS, {
+    const token = signJwt({
       subject: user.id.toString(),
       expiresIn: env.JWT_TOKEN_EXPIRE,
     });
 
-    const refreshToken = jwt.sign({}, env.JWT_PASS, {
+    const refreshToken = signJwt({
       subject: user.id.toString(),
       expiresIn: env.JWT_REFRESH_TOKEN_EXPIRE,
     });

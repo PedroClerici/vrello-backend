@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 import UpdateUserService from './update-user.service';
 import UpdateUserRequestDTO from '@/api/dtos/update-user/update-user-request.dto';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
-import makeUser from '../auth/make-user.factory';
+import makeUser from '@/tests/helpers/make-user.factory';
 import { BadRequestError } from '@/utils/api-errors';
 
 describe('Get user by id', () => {

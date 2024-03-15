@@ -1,7 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express';
-import jwt, { TokenExpiredError, type JwtPayload } from 'jsonwebtoken';
 
-import { env } from '@/config';
+import { verifyJwt } from '@/utils/jwt';
 import { UnauthorizedError } from '@/utils/api-errors';
 import GetUserByIdService from '../services/users/get-user-by-id.service';
 import UsersRepositoryMongoose from '../repositories/mongoose/users.repository';
@@ -21,13 +20,7 @@ const isAuthenticated = async (
 
   const [, token] = authorization.split(' ');
 
-  const { sub } = jwt.verify(token, env.JWT_PASS, (err, decoded) => {
-    if (err instanceof TokenExpiredError) {
-      throw new UnauthorizedError('Token has expired');
-    }
-
-    return decoded;
-  }) as unknown as JwtPayload;
+  const { sub } = verifyJwt(token);
 
   const user = await new GetUserByIdService(
     new UsersRepositoryMongoose(),

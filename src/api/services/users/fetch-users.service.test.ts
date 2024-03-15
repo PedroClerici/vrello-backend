@@ -1,6 +1,6 @@
 import FetchUsersService from './fetch-users.service';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
-import makeUser from '../auth/make-user.factory';
+import makeUser from '@/tests/helpers/make-user.factory';
 
 describe('Fetch users', () => {
   let usersRepository: UsersRepositoryInMemory;

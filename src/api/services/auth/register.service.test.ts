@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import RegisterService from './register.service';
 import RegisterRequestDTO from '@/api/dtos/register/register-request.dto';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
-import makeUser from './make-user.factory';
+import makeUser from '@/tests/helpers/make-user.factory';
 import { BadRequestError } from '@/utils/api-errors';
 
 describe('Register user', () => {
