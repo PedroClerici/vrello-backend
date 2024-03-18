@@ -2,7 +2,7 @@ import { env } from '@/config';
 import { signJwt, verifyJwt } from '@/utils/jwt';
 import { UnauthorizedError } from '@/utils/api-errors';
 import { type UsersRepository } from '@/api/repositories';
-import type RefreshRequestDTO from '@/api/dtos/refresh/refresh-request.dto';
+import type RefreshRequestDTO from '@/api/dtos/auth/refresh/refresh-request.dto';
 
 class RefreshService {
   public constructor(private readonly userRepository: UsersRepository) {}

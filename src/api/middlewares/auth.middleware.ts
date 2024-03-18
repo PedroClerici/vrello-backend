@@ -2,10 +2,10 @@ import { type Request, type Response, type NextFunction } from 'express';
 
 import { verifyJwt } from '@/utils/jwt';
 import { UnauthorizedError } from '@/utils/api-errors';
-import GetUserByIdService from '../services/users/get-user-by-id.service';
-import UsersRepositoryMongoose from '../repositories/mongoose/users.repository';
-import GetUserByIdRequestDTO from '../dtos/get-user-by/get-user-by-id-request.dto';
-import GetUserByResponseDTO from '../dtos/get-user-by/get-user-by-response.dto';
+import GetUserByIdService from '@/api/services/users/get-user-by-id.service';
+import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
+import GetUserByIdRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-id-request.dto';
+import GetUserByResponseDTO from '@/api/dtos/users/get-user-by/get-user-by-response.dto';
 
 const isAuthenticated = async (
   req: Request,

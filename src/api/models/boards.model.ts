@@ -1,4 +1,11 @@
-import { type InferSchemaType, model, Schema } from 'mongoose';
+import { type Types, Schema, model } from 'mongoose';
+
+export type Board = {
+  id: Types.ObjectId;
+  author: Types.ObjectId;
+  description: string;
+  visibility: string;
+};
 
 enum Visibility {
   public,
@@ -12,9 +19,15 @@ const boardSchema = new Schema(
     description: { type: String },
     visibility: { type: String, enum: Visibility },
   },
-  { timestamps: true, versionKey: false },
+  {
+    versionKey: false,
+    toObject: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  },
 );
 
-export type Board = InferSchemaType<typeof boardSchema>;
-
-export const BoardModel = model('Board', boardSchema);
+export const BoardModel = model<Board>('Board', boardSchema);

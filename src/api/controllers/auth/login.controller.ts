@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 
-import LoginRequestDTO from '@/api/dtos/login/login-request.dto';
+import LoginRequestDTO from '@/api/dtos/auth/login/login-request.dto';
 import LoginService from '@/api/services/auth/login.service';
 import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 

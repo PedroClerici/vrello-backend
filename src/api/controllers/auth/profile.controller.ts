@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import GetUserByEmailRequestDTO from '@/api/dtos/get-user-by/get-user-by-email-request.dto';
-import GetUserByResponseDTO from '@/api/dtos/get-user-by/get-user-by-response.dto';
+import GetUserByEmailRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-email-request.dto';
+import GetUserByResponseDTO from '@/api/dtos/users/get-user-by/get-user-by-response.dto';
 import GetUserByEmailService from '@/api/services/users/get-user-by-email.service';
 import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 

@@ -1,5 +1,5 @@
-import { type Board } from '../models/boards.model';
 import { type User } from '../models/users.model';
+import { type Board } from '../models/boards.model';
 
 export interface BaseRepository<T> {
   create(params: Omit<T, 'id'>): Promise<T | null>;
@@ -12,4 +12,8 @@ export interface BaseRepository<T> {
 export interface UsersRepository extends BaseRepository<User> {
   findByEmail(email: string): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
+}
+
+export interface BoardsRepository extends BaseRepository<Board> {
+  findByAuthor(authorId: string): Promise<Board[]>;
 }

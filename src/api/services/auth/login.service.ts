@@ -4,7 +4,7 @@ import { env } from '@/config';
 import { signJwt } from '@/utils/jwt';
 import { UnauthorizedError } from '@/utils/api-errors';
 import { type UsersRepository } from '@/api/repositories';
-import type LoginRequestDTO from '@/api/dtos/login/login-request.dto';
+import type LoginRequestDTO from '@/api/dtos/auth/login/login-request.dto';
 
 class LoginService {
   public constructor(private readonly userRepository: UsersRepository) {}

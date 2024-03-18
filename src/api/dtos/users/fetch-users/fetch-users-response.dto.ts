@@ -1,7 +1,7 @@
 import z from 'zod';
 import { Types } from 'mongoose';
 
-import AbstractDTO from '../abstract.dto';
+import AbstractDTO from '@/api/dtos/abstract.dto';
 
 const fetchUsersResponseSchema = z.object({
   id: z.instanceof(Types.ObjectId),

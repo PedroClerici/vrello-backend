@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 import GetUserByIdService from './get-user-by-id.service';
 import UsersRepositoryInMemory from '@/api/repositories/in-memory/users.repository';
-import GetUserByIdRequestDTO from '@/api/dtos/get-user-by/get-user-by-id-request.dto';
+import GetUserByIdRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-id-request.dto';
 import makeUser from '@/tests/helpers/make-user.factory';
 import { BadRequestError } from '@/utils/api-errors';
 

@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { env } from '@/config';
 import { BadRequestError } from '@/utils/api-errors';
 import { type UsersRepository } from '@/api/repositories';
-import type RegisterRequestDTO from '@/api/dtos/register/register-request.dto';
+import type RegisterRequestDTO from '@/api/dtos/auth/register/register-request.dto';
 
 class RegisterService {
   public constructor(private readonly userRepository: UsersRepository) {}

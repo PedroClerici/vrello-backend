@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 
-import RefreshRequestDTO from '@/api/dtos/refresh/refresh-request.dto';
+import RefreshRequestDTO from '@/api/dtos/auth/refresh/refresh-request.dto';
 import RefreshService from '@/api/services/auth/refresh.service';
 import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 

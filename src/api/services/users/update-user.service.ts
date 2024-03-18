@@ -1,5 +1,5 @@
 import { type UsersRepository } from '@/api/repositories';
-import type UpdateUserRequestDTO from '@/api/dtos/update-user/update-user-request.dto';
+import type UpdateUserRequestDTO from '@/api/dtos/users/update-user/update-user-request.dto';
 import { BadRequestError } from '@/utils/api-errors';
 
 class UpdateUserService {

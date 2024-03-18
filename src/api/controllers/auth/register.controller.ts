@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import RegisterRequestDTO from '@/api/dtos/register/register-request.dto';
-import RegisterResponseDTO from '@/api/dtos/register/register-response.dto';
+import RegisterRequestDTO from '@/api/dtos/auth/register/register-request.dto';
+import RegisterResponseDTO from '@/api/dtos/auth/register/register-response.dto';
 import RegisterService from '@/api/services/auth/register.service';
 import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 

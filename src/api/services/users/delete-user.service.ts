@@ -1,5 +1,5 @@
 import { type UsersRepository } from '@/api/repositories';
-import type DeleteUserRequestDTO from '@/api/dtos/delete-user/delete-user-request.dto';
+import type DeleteUserRequestDTO from '@/api/dtos/users/delete-user/delete-user-request.dto';
 import { BadRequestError } from '@/utils/api-errors';
 
 class DeleteUserService {

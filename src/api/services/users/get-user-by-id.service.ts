@@ -1,5 +1,5 @@
 import { type UsersRepository } from '@/api/repositories';
-import type GetUserByIdRequestDTO from '@/api/dtos/get-user-by/get-user-by-id-request.dto';
+import type GetUserByIdRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-id-request.dto';
 import { BadRequestError } from '@/utils/api-errors';
 
 class GetUserByIdService {

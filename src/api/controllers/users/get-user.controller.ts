@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import GetUserByIdRequestDTO from '@/api/dtos/get-user-by/get-user-by-id-request.dto';
-import GetUserByResponseDTO from '@/api/dtos/get-user-by/get-user-by-response.dto';
+import GetUserByIdRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-id-request.dto';
+import GetUserByResponseDTO from '@/api/dtos/users/get-user-by/get-user-by-response.dto';
 import GetUserByIdService from '@/api/services/users/get-user-by-id.service';
 import UsersRepositoryMongoose from '@/api/repositories/mongoose/users.repository';
 

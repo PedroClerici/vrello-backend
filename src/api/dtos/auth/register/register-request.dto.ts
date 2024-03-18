@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import AbstractDTO from '../abstract.dto';
+import AbstractDTO from '@/api/dtos/abstract.dto';
 
 const registerRequestSchema = z.object({
   username: z.string().trim(),

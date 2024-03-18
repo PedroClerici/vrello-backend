@@ -1,5 +1,5 @@
 import { type UsersRepository } from '@/api/repositories';
-import type GetUserByEmailRequestDTO from '@/api/dtos/get-user-by/get-user-by-email-request.dto';
+import type GetUserByEmailRequestDTO from '@/api/dtos/users/get-user-by/get-user-by-email-request.dto';
 import { BadRequestError } from '@/utils/api-errors';
 
 class GetUserByEmailService {
