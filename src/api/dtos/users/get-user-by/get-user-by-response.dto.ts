@@ -1,13 +1,7 @@
-import z from 'zod';
-import { Types } from 'mongoose';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { userResponseSchema } from '../users-schemas';
 
-const getUserByResponseSchema = z.object({
-  id: z.instanceof(Types.ObjectId),
-  username: z.string().trim(),
-  email: z.string().email().trim().toLowerCase(),
-});
+const getUserByResponseSchema = userResponseSchema;
 
 class GetUserByResponseDTO extends AbstractDTO<typeof getUserByResponseSchema> {
   protected rules() {

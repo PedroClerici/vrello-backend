@@ -1,7 +1,7 @@
 import AbstractDTO from '@/api/dtos/abstract.dto';
-import boardSchema from '../base-board-schema';
+import { boardRequestSchema } from '../boards-schemas';
 
-const createBoardRequestSchema = boardSchema.omit({ id: true });
+const createBoardRequestSchema = boardRequestSchema.omit({ id: true });
 
 class CreateBoardRequestDTO extends AbstractDTO<
   typeof createBoardRequestSchema

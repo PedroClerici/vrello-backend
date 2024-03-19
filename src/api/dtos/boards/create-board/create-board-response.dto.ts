@@ -1,9 +1,9 @@
 import AbstractDTO from '@/api/dtos/abstract.dto';
-import boardSchema from '../base-board-schema';
+import { boardResponseSchema } from '../boards-schemas';
 
-const createBoardResponseSchema = boardSchema;
+const createBoardResponseSchema = boardResponseSchema;
 
-class CreateBoardRequestDTO extends AbstractDTO<
+class CreateBoardResponseDTO extends AbstractDTO<
   typeof createBoardResponseSchema
 > {
   protected rules() {
@@ -11,4 +11,4 @@ class CreateBoardRequestDTO extends AbstractDTO<
   }
 }
 
-export default CreateBoardRequestDTO;
+export default CreateBoardResponseDTO;

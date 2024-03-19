@@ -11,10 +11,13 @@ const login = async (request: Request, response: Response) => {
     new UsersRepositoryMongoose(),
   ).execute(data);
 
-  return response
-    .status(200)
-    .cookie('refreshToken', refreshToken)
-    .json({ token });
+  return (
+    response
+      .status(200)
+      // TODO: Make this token secure
+      .cookie('refreshToken', refreshToken)
+      .json({ token })
+  );
 };
 
 export default login;

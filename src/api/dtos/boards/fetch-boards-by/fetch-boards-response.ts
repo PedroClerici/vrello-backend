@@ -1,7 +1,7 @@
 import AbstractDTO from '@/api/dtos/abstract.dto';
-import boardSchema from '../base-board-schema';
+import { boardResponseSchema } from '../boards-schemas';
 
-const fetchBoardsResponseSchema = boardSchema;
+const fetchBoardsResponseSchema = boardResponseSchema;
 
 class FetchBoardsResponseDTO extends AbstractDTO<
   typeof fetchBoardsResponseSchema

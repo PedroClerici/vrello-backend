@@ -8,7 +8,7 @@ class CreateBoardService {
     const board = await this.boardsRepository.create(data.getAll());
 
     if (!board) {
-      throw new Error("Couldn't create user");
+      throw new Error("Couldn't create board");
     }
 
     return board;

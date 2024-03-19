@@ -1,11 +1,7 @@
-import z from 'zod';
-import { isValidObjectId } from 'mongoose';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { userRequestSchema } from '../users-schemas';
 
-const deleteUserRequestSchema = z.object({
-  id: z.string().refine((id) => isValidObjectId(id)),
-});
+const deleteUserRequestSchema = userRequestSchema.pick({ id: true });
 
 class DeleteUserRequestDTO extends AbstractDTO<typeof deleteUserRequestSchema> {
   protected rules() {

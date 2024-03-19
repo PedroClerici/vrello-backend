@@ -1,15 +1,8 @@
-import z from 'zod';
-import { isValidObjectId } from 'mongoose';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { userRequestSchema } from '../users-schemas';
 
-const updateUserRequestSchema = z
-  .object({
-    id: z.string().refine((id) => isValidObjectId(id)),
-    username: z.string().trim(),
-    email: z.string().email().trim().toLowerCase(),
-    // password: z.string().min(5),
-  })
+const updateUserRequestSchema = userRequestSchema
+  .omit({ password: true })
   .partial()
   .required({ id: true })
   .refine(

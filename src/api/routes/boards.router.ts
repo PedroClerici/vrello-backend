@@ -12,4 +12,9 @@ boardsRouter
   .post(boardsControllers.createBoard)
   .get(boardsControllers.fetchBoardsByAuthor);
 
+boardsRouter
+  .route('/:boardId')
+  .patch(boardsControllers.updateBoard)
+  .delete(boardsControllers.deleteBoard);
+
 export default boardsRouter;

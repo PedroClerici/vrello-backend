@@ -1,5 +1,4 @@
 import { type Request, type Response } from 'express';
-import { Types } from 'mongoose';
 
 import CreateBoardRequestDTO from '@/api/dtos/boards/create-board/create-board-request.dto';
 import CreateBoardResponseDTO from '@/api/dtos/boards/create-board/create-board-response.dto';
@@ -9,7 +8,7 @@ import BoardsRepositoryMongoose from '@/api/repositories/mongoose/boards.reposit
 const createBoard = async (request: Request, response: Response) => {
   const data = new CreateBoardRequestDTO({
     ...request.body,
-    author: new Types.ObjectId(request.params.userId),
+    author: request.params.userId,
   });
 
   const board = await new CreateBoardService(

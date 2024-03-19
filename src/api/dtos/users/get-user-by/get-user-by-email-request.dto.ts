@@ -1,10 +1,7 @@
-import z from 'zod';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { userRequestSchema } from '../users-schemas';
 
-const getUserByEmailRequestSchema = z.object({
-  email: z.string().email().trim().toLowerCase(),
-});
+const getUserByEmailRequestSchema = userRequestSchema.pick({ email: true });
 
 class GetUserByEmailRequestDTO extends AbstractDTO<
   typeof getUserByEmailRequestSchema

@@ -1,11 +1,7 @@
-import z from 'zod';
-import { isValidObjectId } from 'mongoose';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { userRequestSchema } from '../users-schemas';
 
-const getUserByIdRequestSchema = z.object({
-  id: z.string().refine((id) => isValidObjectId(id)),
-});
+const getUserByIdRequestSchema = userRequestSchema.pick({ id: true });
 
 class GetUserByIdRequestDTO extends AbstractDTO<
   typeof getUserByIdRequestSchema

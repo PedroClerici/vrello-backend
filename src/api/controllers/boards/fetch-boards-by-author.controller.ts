@@ -7,7 +7,7 @@ import BoardsRepositoryMongoose from '@/api/repositories/mongoose/boards.reposit
 
 const fetchBoardsByAuthor = async (request: Request, response: Response) => {
   const data = new FetchBoardsByAuthorRequestDTO({
-    authorId: request.params.userId,
+    author: request.params.userId,
   });
 
   const boards = await new FetchBoardsByAuthorService(

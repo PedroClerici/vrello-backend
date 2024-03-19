@@ -6,7 +6,7 @@ class FetchBoardsByAuthorService {
 
   public async execute(data: FetchBoardsByAuthorRequestDTO) {
     const boards = await this.boardsRepository.findByAuthor(
-      data.get('authorId'),
+      data.get('author').toString(),
     );
 
     return boards;

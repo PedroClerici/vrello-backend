@@ -1,17 +1,13 @@
-import { z } from 'zod';
-import { isValidObjectId } from 'mongoose';
-
 import AbstractDTO from '@/api/dtos/abstract.dto';
+import { boardRequestSchema } from '../boards-schemas';
 
-const fetchBoardsResponseSchema = z.object({
-  authorId: z.string().refine((id) => isValidObjectId(id)),
-});
+const fetchBoardsRequestSchema = boardRequestSchema.pick({ author: true });
 
 class FetchBoardsByAuthorRequestDTO extends AbstractDTO<
-  typeof fetchBoardsResponseSchema
+  typeof fetchBoardsRequestSchema
 > {
   protected rules() {
-    return fetchBoardsResponseSchema;
+    return fetchBoardsRequestSchema;
   }
 }
 
