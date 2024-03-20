@@ -1,5 +1,6 @@
 import { type User } from '../models/users.model';
 import { type Board } from '../models/boards.model';
+import { type List } from '../models/lists.model';
 
 export interface BaseRepository<T> {
   create(params: Omit<T, 'id'>): Promise<T | null>;
@@ -16,4 +17,8 @@ export interface UsersRepository extends BaseRepository<User> {
 
 export interface BoardsRepository extends BaseRepository<Board> {
   findByAuthor(authorId: string): Promise<Board[]>;
+}
+
+export interface ListsRepository extends BaseRepository<List> {
+  findByBoard(boardId: string): Promise<List[]>;
 }

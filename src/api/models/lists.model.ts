@@ -1,4 +1,10 @@
-import { type InferSchemaType, model, Schema } from 'mongoose';
+import { Types, model, Schema } from 'mongoose';
+
+export type List = {
+  id: Types.ObjectId;
+  title: string;
+  board: Types.ObjectId;
+};
 
 const listSchema = new Schema(
   {
@@ -9,9 +15,15 @@ const listSchema = new Schema(
       ref: 'Board',
     },
   },
-  { timestamps: true, versionKey: false },
+  {
+    versionKey: false,
+    toObject: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  },
 );
 
-export type List = InferSchemaType<typeof listSchema>;
-
-export const ListModel = model('List', listSchema);
+export const ListModel = model<List>('List', listSchema);
