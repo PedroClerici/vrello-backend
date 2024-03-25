@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 
-import DeleteListRequestDTO from '@/api/dtos/lists/delete-list/delete-delete-request.dto';
+import DeleteListRequestDTO from '@/api/dtos/lists/delete-list/delete-list-request.dto';
 import CreateListResponseDTO from '@/api/dtos/lists/create-list/create-list-response.dto';
 import DeleteListService from '@/api/services/lists/delete-list.service';
 import ListsRepositoryMongoose from '@/api/repositories/mongoose/lists.repository';

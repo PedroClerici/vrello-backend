@@ -1,12 +1,26 @@
-import { type InferSchemaType, model, Schema } from 'mongoose';
+import { Types, model, Schema } from 'mongoose';
 
-enum Colors {
-  red,
-  green,
-  blue,
-  purple,
-  yellow,
+export enum Colors {
+  Red = 'red',
+  Green = 'green',
+  Blue = 'blue',
+  Purple = 'purple',
+  Yellow = 'yellow',
 }
+
+export type Tag = {
+  name: string;
+  color: Colors;
+};
+
+export type Card = {
+  id: Types.ObjectId;
+  title: string;
+  description?: string;
+  tags?: Tag[];
+  list: Types.ObjectId;
+  board: Types.ObjectId;
+};
 
 const tagSchema = new Schema({
   name: { type: String, required: true },
@@ -29,9 +43,15 @@ const cardSchema = new Schema(
       ref: 'Board',
     },
   },
-  { timestamps: true, versionKey: false },
+  {
+    versionKey: false,
+    toObject: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  },
 );
 
-export type Card = InferSchemaType<typeof cardSchema>;
-
-export const CardModel = model('List', cardSchema);
+export const CardModel = model<Card>('Card', cardSchema);
